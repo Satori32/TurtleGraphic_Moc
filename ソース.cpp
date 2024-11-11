@@ -17,6 +17,53 @@ struct TurtleParam {
 	bool IsLeftIsXMinus = true;
 };
 
+struct Type {
+	//type Type = NULL;
+	typedef double Type;
+	//type T = Type;
+	T Value;
+};
+
+template<class T>
+Type CosntructType<T>(const T& X) {
+	Type Ty = { T,X };
+
+	return Ty;
+}
+
+
+struct Lambada
+{
+	Type A;
+	Type B;
+	Type C;
+	Type D;
+	Type R;
+	R.T(*F)(A.T, B.T,C.T,D.T)=NULL;
+};
+template<class A, class B, class C, class D, class R>
+Lambada ConstructLambada(const A& a, const B& b, const C& c, const D& d,R(*F)(A,B,C,D)) {
+	Lambada L;
+	L.A = ConstructType<A>(a);
+	L.B = ConstructType<B>(b);
+	L.C = ConstructType<C>(c);
+	L.D = ConstructType<D>(d);
+	L.F = F;
+}
+bool Free(Lambada& In) {
+	Free(In.A);
+	Free(In.B);
+	Free(In.C);
+	Free(In.D);
+	Free(In.R);
+}
+
+In.R.T Call(Lambada& In) {
+	In.R, Value = In.F(In.A.Value, In.B.Value, In.C.Value, In.D.Value);
+	return In.R.Value;
+
+}
+
 TurtleParam ConstructTurtleParam(Point2D<double>& O, Point2D<double>& N) {
 	TurtleParam T;
 	T.Origin = O;
@@ -68,6 +115,14 @@ bool Forward(TurtleGraphics2D& In, double L) {
 	Point2D<double> B = ConstructPoint2D(In.Param.Origin.X + In.Param.Now.X + P.X, In.Param.Origin.Y + In.Param.Now.Y + P.Y);
 	Line(In.Pixels, A, B, In.C);
 	return true;
+}
+bool Curve(TurtleGraphics2D& In, double L, Lambada& L) {
+	//do it your self.
+	return false;
+}
+bool Curve(TurtleGraphics2D& In, double L, Lambada& A, Lambada& B, Lambada& C) {
+	//do it your self.
+	return false;
 }
 bool SetPen(TurtleGraphics2D& In, TurtleGraphics2D::Color C) {
 	In.C = C;
