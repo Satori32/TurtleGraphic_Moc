@@ -29,6 +29,18 @@ bool SetPixelF(FixedSurfaceT& In, double X, double Y, In.Color& C) {//omake
 	(*Index(In, In.Width * X, In.Height * Y)) = C;
 	return true;
 }
+bool Line(FixedSurfaceT& In, Point2D<double>& A, Point2D<double>& B, In.Color C) {
+	double X = B.X - A.X;
+	double Y = B.Y - A.Y;
+	double Z = X > Y ? Y : X;
+	size_t A = 1.0 / Z;
+
+	for (size_t i = 0; (i * A) <= 1.0; i++) {
+		if (Index((In, A.X + ((X / Z) * i), A.Y + ((Y / Z) * i) == NULL) { return false; }
+		(*Index(In, A.X + (X / Z) * i, A.Y + (Y / Z) * i)) = C;
+	}
+
+
 intmax_t Width(FixedSurfaceT& In) {
 	return In.Width;
 }

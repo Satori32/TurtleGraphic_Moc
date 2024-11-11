@@ -26,8 +26,10 @@ TurtleParam ConstructTurtleParam(Point2D<double>& O, Point2D<double>& N) {
 }
 
 struct TurtleGraphics2D{
-	FixedSurfaceT<RGB24> Pixels;
+	typedef RGB24 Color;
+	FixedSurfaceT<Color> Pixels;
 	TurtleParam Param;
+	Color C;
 };
 
 template<class T,size_t W,size_t H>
@@ -43,16 +45,67 @@ TurtleGraphics2D ConstructTurtleGraphics<T, W, H>() {
 	return Tu;
 }
 
-bool Line(FixedSurfaceT<In.Color>& In, Point2D<double>& A, Point2D<double>& B,In.Color C) {
-	double X = B.X - A.X;
-	double Y = B.Y - A.Y;
-	double Z = X > Y ? Y : X;
-	size_t A = 1.0 / Z;
+bool Turn(TurtleGraphics2D& In, double Theta){
+	In.Param.Theta += Theta *(In.Param.IsUpIsYPulse? -1:1);
+	In.Param.Theta = fmod(In.Param.Theta+360.0, 360.0);
+	return true;
+}
+bool Forward(TurtleGraphics2D& In, double L) {
+	Point2D<double> P = ConstructPoint2D(L*(In.Param.IsLeftIsXMinus? 1:-1), 0);
+	P=LotXY(P, In.Param.Theta);
+	Point2D<double> A = ConstructPoint2D(In.Param.Origin.X + In.Param.Now, In.Param.Origin.Y + In.Param.Now.Y);
+	Point2D<double> B = ConstructPoint2D(In.Param.Origin.X + In.Param.Now.X + P.X, In.Param.Origin.Y + In.Param.Now.Y + P.Y);
+	Line(In.Pixels, A, B, In.C);
+	return true;
+}
+bool SetPen(TurtleGraphics2D& In, TurtleGraphics2D::Color C) {
+	In.C = C;
+	return true;
+}
+bool UpToPlus(TurtleGraphics2D& In, bool B) {
+	In.Param.IsUpIsYPulse = B;
+	return true;
+}
 
-	for (size_t i = 0; (i * A) <= 1.0; i++) {
-		if (Index((In,A.X+((X/Z)*i),A.Y+((Y/Z)*i) == NULL) {return false;}
-		(*Index(In, A.X + (X / Z) * i, A.Y + (Y / Z) * i)) = C;
-	}
+bool TurnY(TurtleGraphics2D& In) {
+	bool B = In.Param.IsUpIsYPulse;
+	In.Param.IsUpIsYPulse = !B;
+	return true;
+}
 
+bool LeftToMinus(TurtleGraphics2D& In, bool B) {
+	In.Param.IsLeftIsXMinus = B;
+	return true;
+}
+bool TurnX(TurtleGraphics2D& In) {
+	bool B = In.Param.IsLeftIsXMinus;
+	In.Param.IsLeftIsXMinus = !B;
+
+	return true;
+}
+bool SetOrigin(TurtleGraphics2D& In, Point2D<double>& P) {
+	In.Param.Origin = P;
+	return true;
+}
+bool AddOrigin(TurtleGraphics2D& In, Point2D<double>& P) {
+	In.Param.Origin.X += In.Param.IsLeftIsXMinus ? P.X : -P.X;
+	In.Param.Origin.Y += In.Param.IsUpIsYPulse ? P.Y : -P.Y;
+	return true;
+}
+bool MovePoint(TurtleGraphics2D& In, Point2D<double>& P) {
+	In.Param.Now.X = P.X * (In.Param.IsLeftIsXMinus ? 1 : -1);
+	In.Param.Now.Y = P.Y * (In.Param.IsLeftIsXMinus ? 1 : -1);
+	return true;
+}
+bool Line(TurtleGraphics2D& In, Point2D<double>& P) {
+	//In.Param.Now.X = P.X * (In.Param.IsLeftIsXMinus ? 1 : -1);
+	//In.Param.Now.Y = P.Y * (In.Param.IsLeftIsXMinus ? 1 : -1);
+	P.X *= (In.Param.IsLeftIsXMinus ? 1 : -1);
+	P.Y *= (In.Param.IsLeftIsXMinus ? 1 : -1);
+	Point2D<double> A = CosntructPoint2D<double>(In.Param.Origin.X + In.Param.Now.X, In.Param.Origin.Y + In.Param.Now.Y);
+	Point2D<double> B = CosntructPoint2D<double>(In.Param.Origin.X + In.Param.Now.X+P.X, In.Param.Origin.Y + In.Param.Now.Y+P.Y);
+	Line(In.Pixels, A, B, In.C);
+	In.Param.Now.X += P.X;
+	In.Param.Now.Y += P.Y;
 	return true;
 }

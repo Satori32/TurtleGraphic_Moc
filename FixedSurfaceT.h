@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#include "Point2D.h"
+
 template<class T>
 struct RGBOne {
 	T C = 0;
@@ -70,5 +72,6 @@ bool Free(FixedSurfaceT& In);
 In.Color* Index(FixedSurfaceT& In, intmax_t X, intmax_t Y);
 bool SetPixel(FixedSurfaceT& In, intmax_t X, intmax_t Y, In.Color& C);
 bool SetPixelF(FixedSurfaceT& In, double X, double Y, In.Color& C);//omake
+bool Line(FixedSurfaceT& In, Point2D<double>& A, Point2D<double>& B, In.Color C);
 intmax_t Width(FixedSurfaceT& In);
 intmax_t Height(FixedSurfaceT& In);
