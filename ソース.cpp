@@ -12,6 +12,7 @@ struct TurtleParam {
 	Point2D<Metric> Origin;
 	Point2D<Metric> Now;
 	Metric Theta = 0;
+	Metric Delta = 3;
 	bool IsUpIsYPulse = true;
 	bool IsLeftIsXMinus = true;
 };
@@ -48,6 +49,16 @@ TurtleGraphics2D ConstructTurtleGraphics<T, W, H>() {
 bool Turn(TurtleGraphics2D& In, double Theta){
 	In.Param.Theta += Theta *(In.Param.IsUpIsYPulse? -1:1);
 	In.Param.Theta = fmod(In.Param.Theta+360.0, 360.0);
+	return true;
+}
+bool TurnLeft(TurtleGraphics2D& In) {
+	Turn(In,In.Param.Theta - In.Param.Delta);
+}
+bool TurnRight(TurtleGraphics2D& In) {
+	Turn(In, In.Param.Theta + In.Param.Delta);
+}
+bool SetDelta(TurtleGraphics2D& In, double Delta) {
+	In.Param.Delta = Delta;
 	return true;
 }
 bool Forward(TurtleGraphics2D& In, double L) {
