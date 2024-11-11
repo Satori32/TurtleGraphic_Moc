@@ -5,6 +5,8 @@
 #include "Point2D.h"
 #include "FixedSurfaceT.h"
 
+//work in progress.
+
 struct TurtleParam {
 	typedef double Metric;
 	Point2D<Metric> Origin;
